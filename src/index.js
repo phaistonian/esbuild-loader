@@ -26,13 +26,19 @@ module.exports = async function (source) {
       )
     }
 
+    const start = Date.now();
+
     const result = await service.transform(source, {
       target: options.target || 'es2015',
-      loader: ext.slice(1),
+      loader: options.loader || ext.slice(1),
       jsxFactory: options.jsxFactory,
       jsxFragment: options.jsxFragment,
       sourcemap: options.sourceMap
     })
+
+    if (options.log) {
+      console.log('esbuild in', Date.now() - start);
+    }
     done(null, result.js, result.jsSourceMap)
   } catch (err) {
     done(err)
